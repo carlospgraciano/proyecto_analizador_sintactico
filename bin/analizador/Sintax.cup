@@ -1,0 +1,106 @@
+package analizador;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal Class, Int, If, Return, Print, Op_Booleano,
+		LParen, RParen, LCurly, RCurly, Sum, Minus, Multiply, Divide, Power,
+		Op_Logical, Memb_Access, Assign, SEMICOLON, ERROR
+;
+terminal Integer Numero
+;
+terminal String Identificador
+;
+
+non terminal INICIO, SENTENCIA, LISTA_SENTENCIA, DECLARACION,
+    SENTENCIA_BOOLEANA, FUNCTION, DECL_FUNCTION, CALL_FUNCTION,
+    RETORNAR, IF, IMPRIMIR, CONSTRUCTOR, DECLIST
+;
+non terminal Integer EXPRESSION
+;
+
+precedence left Sum, Minus
+;
+precedence left Multiply, Divide
+;
+precedence right Power
+;
+
+start with INICIO;
+
+INICIO ::=
+    Class Identificador LCurly RCurly |
+    Class Identificador LCurly CONSTRUCTOR RCurly |
+    Class Identificador LCurly CONSTRUCTOR LISTA_SENTENCIA RCurly |
+    Class Identificador LCurly LISTA_SENTENCIA CONSTRUCTOR RCurly |
+    Class Identificador LCurly LISTA_SENTENCIA RCurly |
+    Class Identificador LCurly LISTA_SENTENCIA CONSTRUCTOR LISTA_SENTENCIA RCurly
+;
+LISTA_SENTENCIA ::=
+    SENTENCIA |
+    LISTA_SENTENCIA SENTENCIA
+;
+SENTENCIA ::=
+    DECLARACION |
+    IF |
+    IMPRIMIR |
+    RETORNAR |
+    FUNCTION
+;
+EXPRESSION ::=
+    Numero:e {: RESULT = new Integer(e); :}
+    | EXPRESSION:e1 Sum EXPRESSION:e2 {: RESULT = new Integer((int)e1 + (int)e2);  :}
+    | EXPRESSION:e1 Minus EXPRESSION:e2 {: RESULT = new Integer((int)e1 - (int)e2);  :}
+    | EXPRESSION:e1 Multiply EXPRESSION:e2 {: RESULT = new Integer((int)e1 * (int)e2); :}
+    | EXPRESSION:e1 Divide EXPRESSION:e2 {: RESULT = new Integer((int)e1 / (int)e2); :}
+    | EXPRESSION:e1 Power EXPRESSION:e2 {: RESULT = new Integer((int) Math.pow((int)e1, (int)e2)); :}
+;
+DECLARACION ::=
+    Int Identificador SEMICOLON |
+    Int Identificador Assign Numero SEMICOLON
+;
+SENTENCIA_BOOLEANA ::=
+    Op_Booleano |
+    Identificador Op_Logical Op_Booleano |
+    Identificador Op_Logical Numero |
+    Identificador Op_Logical Identificador
+;
+RETORNAR ::=
+    Return Memb_Access EXPRESSION SEMICOLON |
+    Return Memb_Access CALL_FUNCTION SEMICOLON
+;
+IMPRIMIR ::=
+    Print Memb_Access EXPRESSION:e SEMICOLON
+  | Print Memb_Access CALL_FUNCTION SEMICOLON
+;
+IF ::=
+    If LParen SENTENCIA_BOOLEANA RParen LCurly SENTENCIA RCurly
+;
+CALL_FUNCTION ::=
+    Identificador LParen RParen
+    | Identificador LParen Numero RParen
+    | Identificador LParen Identificador RParen
+;
+DECL_FUNCTION ::=
+    Int Identificador LParen RParen |
+    Int Identificador LParen Int Identificador RParen
+;
+FUNCTION ::=
+    DECL_FUNCTION LCurly LISTA_SENTENCIA RCurly |
+    DECL_FUNCTION LCurly RCurly
+;
+CONSTRUCTOR ::=
+    Identificador LParen RParen LCurly LISTA_SENTENCIA RCurly
+;

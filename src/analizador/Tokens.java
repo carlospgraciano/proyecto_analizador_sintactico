@@ -1,0 +1,31 @@
+package analizador;
+
+public enum Tokens {
+	Class,
+	Int,
+	If,
+	Return,
+	Print,
+	Op_Sumar,
+	Op_Restar,
+	Op_Multiplicar,
+	Op_Dividir,
+	Op_Potencia,
+	LParen,
+	RParen,
+	LCurly,
+	RCurly,
+	Sum,
+	Minus,
+	Multiply,
+	Divide,
+	Power,
+	Op_Logical,
+	Op_Booleano,
+	Memb_Access,
+	Assign,
+	SEMICOLON,
+	Identificador,
+	Numero,
+	ERROR
+}
