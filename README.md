@@ -2,8 +2,6 @@
 
 Nuestro analizador sintáctico **cumple** con los siguientes **requerimientos**:
 
-**Mandato:**
-
 Este proyecto fue hecho utilizando las siguientes **herramientas**:
 * [**Java JDK 8**](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)
 * [**JFlex v1.4.3**](https://mega.nz/#!kp5wmSTR!VRGITdbm5zuSWDMeZ8hVgVYWCNl-J0gMcAqQ2k8FBfM)
